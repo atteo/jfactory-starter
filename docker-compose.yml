@@ -14,7 +14,7 @@ services:
             - "29418:29418"
         environment:
             # http
-            "PROXY_URL":
+            "MAIN_URL":
 
             # ldap
             "LDAP_URL":
@@ -63,7 +63,7 @@ services:
             - /etc/timezone:/etc/timezone:ro
         environment:
             # http
-            "PROXY_URL":
+            "MAIN_URL":
             JAVA_OPTS: "-Djava.awt.headless=true"
     proxy:
         image: jfactory/proxy:1.0
@@ -77,8 +77,6 @@ services:
             # timezone
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
-        environment:
-            - SSL_CERTIFICATE_NAME
 networks:
     default:
         driver: bridge
