@@ -65,7 +65,6 @@ services:
             # http
             "MAIN_URL":
             "JENKINS_SMTP_FROM":
-            JAVA_OPTS: "-Djava.awt.headless=true"
     proxy:
         image: jfactory/proxy:1.0
         ports:
