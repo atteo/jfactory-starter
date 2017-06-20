@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 volumes:
     slave-m2-repository:
     gerrit:
@@ -6,7 +6,7 @@ volumes:
     nexus:
 services:
     gerrit:
-        image: jfactory/gerrit:1.0
+        image: jfactory/gerrit:2.0
         expose:
             - "8080"
             - "29418"
@@ -35,19 +35,19 @@ services:
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
     nexus:
-        image: jfactory/nexus:1.0
+        image: sonatype/nexus3
         expose:
             # www
             - "8081"
             # docker registry
             - "5000"
         volumes:
-            - nexus:/opt/sonatype/nexus/data
+            - nexus:/nexus-data
             # timezone
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
     jenkins:
-        image: jfactory/jenkins:1.0
+        image: jfactory/jenkins:2.0
         expose:
             - "8080"
         # Slaves access Jenkins on this port
@@ -66,7 +66,7 @@ services:
             "MAIN_URL":
             "JENKINS_SMTP_FROM":
     proxy:
-        image: jfactory/proxy:1.0
+        image: jfactory/proxy:2.0
         ports:
             - "80:80"
             - "443:443"
