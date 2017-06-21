@@ -16,6 +16,12 @@ services:
             # http
             "MAIN_URL":
 
+            # auth
+            "GIT_BASIC_AUTH_POLICY":
+
+            # gitweb
+            "GITWEB_TYPE":
+
             # ldap
             "LDAP_URL":
             "LDAP_ACCOUNT_BASE":
