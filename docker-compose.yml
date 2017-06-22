@@ -42,6 +42,8 @@ services:
             - /etc/timezone:/etc/timezone:ro
     nexus:
         image: sonatype/nexus3
+        environment:
+            "NEXUS_CONTEXT": "nexus"
         expose:
             # www
             - "8081"
