@@ -40,6 +40,7 @@ services:
             # timezone
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
+        restart: unless-stopped
     nexus:
         image: sonatype/nexus3
         environment:
@@ -54,6 +55,7 @@ services:
             # timezone
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
+        restart: unless-stopped
     jenkins:
         image: jfactory/jenkins:2.1
         expose:
@@ -73,6 +75,7 @@ services:
             # http
             "MAIN_URL":
             "JENKINS_SMTP_FROM":
+        restart: unless-stopped
     proxy:
         image: jfactory/proxy:2.1
         ports:
@@ -85,6 +88,7 @@ services:
             # timezone
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
+        restart: unless-stopped
 networks:
     default:
         driver: bridge
