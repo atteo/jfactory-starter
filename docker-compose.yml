@@ -1,12 +1,31 @@
-version: '2.1'
+version: '3.4'
 volumes:
     slave-m2-repository:
     gerrit:
     jenkins:
     nexus:
+    ldap_data:
+    ldap_config:
 services:
+    ldap:
+        image: osixia/openldap:1.2.4
+        environment:
+            LDAP_ORGANISATION: ${LDAP_ORGANISATION:-My Company}
+            LDAP_DOMAIN: ${LDAP_DOMAIN:-example.org}
+            LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD:-admin123}
+        command: --copy-service
+        volumes:
+            - ldap_data:/var/lib/ldap
+            - ldap_config:/etc/ldap/slapd.d
+            - ./bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif
+    ldap-admin:
+        image: osixia/phpldapadmin:0.7.1
+        ports:
+            - 6443:443
+        environment:
+            PHPLDAPADMIN_LDAP_HOSTS: ldap
     gerrit:
-        image: jfactory/gerrit:2.1
+        image: jfactory/gerrit:latest
         expose:
             - "8080"
             - "29418"
@@ -14,7 +33,7 @@ services:
             - "29418:29418"
         environment:
             # http
-            "MAIN_URL":
+            "MAIN_URL": https://jfactory.atteo.com/gerrit/
 
             # auth
             "GIT_BASIC_AUTH_POLICY":
@@ -23,9 +42,9 @@ services:
             "GITWEB_TYPE":
 
             # ldap
-            "LDAP_URL":
-            "LDAP_ACCOUNT_BASE":
-            "LDAP_GROUP_BASE":
+            "LDAP_URL": ldap://ldap
+            "LDAP_ACCOUNT_BASE": ou=people,dc=example,dc=com
+            "LDAP_GROUP_BASE": ou=groups,dc=example,dc=com
 
             # smtp
             "SMTP_SERVER":
@@ -57,7 +76,7 @@ services:
             - /etc/timezone:/etc/timezone:ro
         restart: unless-stopped
     jenkins:
-        image: jfactory/jenkins:2.1
+        image: jfactory/jenkins:latest
         expose:
             - "8080"
         # Slaves access Jenkins on this port
@@ -73,8 +92,8 @@ services:
             - /etc/timezone:/etc/timezone:ro
         environment:
             # http
-            "MAIN_URL":
-            "JENKINS_SMTP_FROM":
+            "MAIN_URL": http://jfactory.atteo.com/jenkins/
+            "JENKINS_SMTP_FROM": tichy@atteo.com
         restart: unless-stopped
     proxy:
         image: jfactory/proxy:2.1
