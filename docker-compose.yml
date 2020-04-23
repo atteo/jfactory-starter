@@ -11,13 +11,16 @@ services:
         image: osixia/openldap:1.2.4
         environment:
             LDAP_ORGANISATION: ${LDAP_ORGANISATION:-My Company}
-            LDAP_DOMAIN: ${LDAP_DOMAIN:-example.org}
+            LDAP_DOMAIN: ${LDAP_DOMAIN:-example.com}
             LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD:-admin123}
         command: --copy-service
         volumes:
             - ldap_data:/var/lib/ldap
             - ldap_config:/etc/ldap/slapd.d
             - ./bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif
+        ports:
+            - "389:389"
+            - "636:636"
     ldap-admin:
         image: osixia/phpldapadmin:0.7.1
         ports:
@@ -33,7 +36,13 @@ services:
             - "29418:29418"
         environment:
             # http
-            "MAIN_URL": https://jfactory.atteo.com/gerrit/
+            "MAIN_URL":
+
+            # auth
+            "GIT_BASIC_AUTH_POLICY":
+
+            # gitweb
+            "GITWEB_TYPE":
 
             # auth
             "GIT_BASIC_AUTH_POLICY":
@@ -42,9 +51,11 @@ services:
             "GITWEB_TYPE":
 
             # ldap
-            "LDAP_URL": ldap://ldap
-            "LDAP_ACCOUNT_BASE": ou=people,dc=example,dc=com
-            "LDAP_GROUP_BASE": ou=groups,dc=example,dc=com
+            "LDAP_URL":
+            "LDAP_ACCOUNT_BASE":
+            "LDAP_GROUP_BASE":
+            "LDAP_USERNAME":
+            "LDAP_PASSWORD":
 
             # smtp
             "SMTP_SERVER":
@@ -92,8 +103,8 @@ services:
             - /etc/timezone:/etc/timezone:ro
         environment:
             # http
-            "MAIN_URL": http://jfactory.atteo.com/jenkins/
-            "JENKINS_SMTP_FROM": tichy@atteo.com
+            "MAIN_URL":
+            "JENKINS_SMTP_FROM":
         restart: unless-stopped
     proxy:
         image: jfactory/proxy:2.1
